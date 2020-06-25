@@ -48,7 +48,7 @@ class PolicyCheckerDataCollector extends DataCollector implements LateDataCollec
                 'action' => $action,
                 'resource' => (string) ($log['resource'] ?? null) ?: '*',
                 'subject' => (string) $subject,
-                'context' => isset($log['context']) ? $this->cloneVar($log['context']) : null,
+                'context' => $log['context'] ?? null,
                 'result' => $log['result'],
             ];
         }
@@ -121,16 +121,11 @@ class PolicyCheckerDataCollector extends DataCollector implements LateDataCollec
     }
 
     /**
-     * @return array<string, mixed>[]|null
+     * @return array<string, mixed>[]|Data|null
      */
-    public function getPolicyPermissions(): ?array
+    public function getPolicyPermissions()
     {
-        $data = $this->data['policy_permissions'] ?? null;
-        if ($data instanceof Data) {
-            return $data->getValue();
-        }
-
-        return $data;
+        return $this->data['policy_permissions'] ?? null;
     }
 
     private function getDecoratedService(): SecurityDataCollector

@@ -68,9 +68,9 @@ class PolicyCheckerDataCollectorTest extends TestCase
             'action' => 'GetTest',
             'resource' => 'urn:policy-checker:::test-id',
             'subject' => '',
-            'context' => $cloner->cloneVar([
+            'context' => [
                 'ip' => '127.0.0.1',
-            ]),
+            ],
             'result' => false,
         ] ] ];
     }
