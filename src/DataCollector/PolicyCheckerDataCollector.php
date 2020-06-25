@@ -125,7 +125,12 @@ class PolicyCheckerDataCollector extends DataCollector implements LateDataCollec
      */
     public function getPolicyPermissions(): ?array
     {
-        return $this->data['policy_permissions'] ?? null;
+        $data = $this->data['policy_permissions'] ?? null;
+        if ($data instanceof Data) {
+            return $data->getValue();
+        }
+
+        return $data;
     }
 
     private function getDecoratedService(): SecurityDataCollector
