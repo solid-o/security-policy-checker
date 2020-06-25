@@ -1,5 +1,5 @@
 {
-    "name": "solido/security-policy-checked",
+    "name": "solido/security-policy-checker",
     "description": "Utilities to build policy-based security checks for REST APIs.",
     "type": "library",
     "license": "MIT",
