@@ -27,6 +27,7 @@ class PolicyCheckerDataCollector extends DataCollector implements LateDataCollec
 
     private SecurityDataCollector $decorated;
     private TraceablePolicyChecker $policyChecker;
+    private string $baseTemplate = '@Security/Collector/security.html.twig';
 
     public function __construct(SecurityDataCollector $decorated, TraceablePolicyChecker $policyChecker)
     {
@@ -58,6 +59,16 @@ class PolicyCheckerDataCollector extends DataCollector implements LateDataCollec
     public function getName(): string
     {
         return $this->getDecoratedService()->getName();
+    }
+
+    public function setBaseTemplate(string $baseTemplate): void
+    {
+        $this->baseTemplate = $baseTemplate;
+    }
+
+    public function getBaseTemplate(): string
+    {
+        return $this->baseTemplate;
     }
 
     /**
