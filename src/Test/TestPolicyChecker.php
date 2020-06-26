@@ -10,6 +10,7 @@ use Solido\PolicyChecker\Exception\NotSupportedException;
 use Solido\PolicyChecker\PolicyCheckerInterface;
 use function array_filter;
 use function array_map;
+use function array_unique;
 use function debug_backtrace;
 use function get_class;
 use function is_array;
@@ -24,6 +25,9 @@ class TestPolicyChecker implements PolicyCheckerInterface
     /** @var array<string, array<string, mixed>[]> */
     private static array $permissionsByTest = [];
 
+    /** @var string[] */
+    private static array $checkedActions = [];
+
     /**
      * {@inheritdoc}
      */
@@ -36,6 +40,7 @@ class TestPolicyChecker implements PolicyCheckerInterface
             return true;
         }
 
+        self::$checkedActions[] = $action;
         $policies = self::$permissionsByTest[$testName] ?? [];
         if (empty($policies)) {
             return true;
@@ -107,6 +112,16 @@ class TestPolicyChecker implements PolicyCheckerInterface
             'actions' => $toRegexArray($actions),
             'resources' => $toRegexArray($resources),
         ];
+    }
+
+    /**
+     * Gets all the actions checked in the current test suite run.
+     *
+     * @return string[]
+     */
+    public static function getCheckedActions(): array
+    {
+        return array_unique(self::$checkedActions);
     }
 
     private static function getCurrentTest(): ?string
