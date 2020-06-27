@@ -25,6 +25,9 @@ class TestPolicyChecker implements PolicyCheckerInterface
     /** @var array<string, array<string, mixed>[]> */
     private static array $permissionsByTest = [];
 
+    /** @var array<string, bool> */
+    private static array $defaultByTest = [];
+
     /** @var string[] */
     private static array $checkedActions = [];
 
@@ -43,7 +46,7 @@ class TestPolicyChecker implements PolicyCheckerInterface
         self::$checkedActions[] = $action;
         $policies = self::$permissionsByTest[$testName] ?? [];
         if (empty($policies)) {
-            return true;
+            return self::$defaultByTest[$testName] ?? true;
         }
 
         $resourceUrn = (string) $resource;
@@ -122,6 +125,22 @@ class TestPolicyChecker implements PolicyCheckerInterface
     public static function getCheckedActions(): array
     {
         return array_unique(self::$checkedActions);
+    }
+
+    /**
+     * Deny grant if no policy has set for the current test.
+     */
+    public static function defaultDeny(): void
+    {
+        self::$defaultByTest[self::getCurrentTest()] = false;
+    }
+
+    /**
+     * Allow grant if no policy has set for the current test.
+     */
+    public static function defaultAllow(): void
+    {
+        self::$defaultByTest[self::getCurrentTest()] = true;
     }
 
     private static function getCurrentTest(): ?string
