@@ -147,7 +147,7 @@ class TestPolicyChecker implements PolicyCheckerInterface
     {
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT);
         foreach ($backtrace as $frame) {
-            if ($frame['type'] !== '->' || ! $frame['object'] instanceof TestCase) {
+            if (! ($frame['object'] ?? null) instanceof TestCase) {
                 continue;
             }
 
