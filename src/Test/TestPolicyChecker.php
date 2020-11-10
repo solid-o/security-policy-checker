@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Solido\Common\Urn\Urn;
 use Solido\PolicyChecker\Exception\NotSupportedException;
 use Solido\PolicyChecker\PolicyCheckerInterface;
+
 use function array_filter;
 use function array_map;
 use function array_unique;
@@ -17,6 +18,7 @@ use function is_array;
 use function Safe\preg_match;
 use function strlen;
 use function trigger_error;
+
 use const DEBUG_BACKTRACE_PROVIDE_OBJECT;
 use const E_USER_WARNING;
 

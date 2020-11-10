@@ -16,6 +16,7 @@ use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 use Symfony\Component\VarDumper\Cloner\Data;
 use Throwable;
+
 use function assert;
 use function is_array;
 use function method_exists;

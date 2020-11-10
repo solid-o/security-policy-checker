@@ -7,6 +7,7 @@ namespace Solido\PolicyChecker;
 use Solido\Common\Urn\Urn;
 use Solido\PolicyChecker\Exception\NotSupportedException;
 use Solido\PolicyChecker\Voter\VoterInterface;
+
 use function array_map;
 
 class PolicyChecker implements PolicyCheckerInterface
@@ -48,9 +49,9 @@ class PolicyChecker implements PolicyCheckerInterface
             try {
                 $voter->addPolicy(
                     $effect,
-                    array_map(static fn($v) => (string) $v, (array) $subjects),
-                    array_map(static fn($v) => (string) $v, (array) $actions),
-                    array_map(static fn($v) => (string) $v, (array) $resources),
+                    array_map(static fn ($v) => (string) $v, (array) $subjects),
+                    array_map(static fn ($v) => (string) $v, (array) $actions),
+                    array_map(static fn ($v) => (string) $v, (array) $resources),
                     $conditions ?? []
                 );
             } catch (NotSupportedException $e) {
