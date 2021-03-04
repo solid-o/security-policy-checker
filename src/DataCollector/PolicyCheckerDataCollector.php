@@ -73,12 +73,11 @@ class PolicyCheckerDataCollector extends DataCollector implements LateDataCollec
     }
 
     /**
-     * @param string $name
      * @param mixed[] $arguments
      *
      * @return mixed
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments)
     {
         $decorated = $this->getDecoratedService();
 
