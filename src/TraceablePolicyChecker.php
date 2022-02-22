@@ -55,7 +55,7 @@ class TraceablePolicyChecker implements PolicyCheckerInterface, ResetInterface
 
     /**
      * @return array<string, array<string|bool>>
-     * @phpstan-return array<string, array{action: string, resource: string, subject: string, result: bool}>
+     * @phpstan-return array<string, array{action?: string, resource?: string, subject?: string, context?: array, result: bool}>
      */
     public function getTraces(): array
     {
