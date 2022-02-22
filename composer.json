@@ -23,14 +23,14 @@
     },
     "require-dev": {
         "phpspec/prophecy-phpunit": "^2.0",
-        "phpunit/phpunit": "^9.4",
+        "phpunit/phpunit": "^9.5",
         "roave/security-advisories": "dev-master",
-        "solido/common": "*",
+        "solido/common": "^0.2 || ^0.3",
         "solido/php-coding-standards": "dev-master",
-        "symfony/http-foundation": "^5.0",
-        "symfony/http-kernel": "^5.0",
-        "symfony/security-bundle": "^5.0",
-        "symfony/var-dumper": "^5.0"
+        "symfony/http-foundation": "^5.0 || ^6.0",
+        "symfony/http-kernel": "^5.0 || ^6.0",
+        "symfony/security-bundle": "^5.0 || ^6.0",
+        "symfony/var-dumper": "^5.0 || ^6.0"
     },
     "autoload": {
         "psr-4": {
@@ -43,14 +43,18 @@
         }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
+        }
     },
     "archive": {
         "exclude": [ ".gitignore", ".travis.yml", "tests" ]
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.2.x-dev"
+            "dev-master": "0.3.x-dev"
         }
     }
 }
