@@ -12,21 +12,15 @@ use function array_map;
 
 class PolicyChecker implements PolicyCheckerInterface
 {
-    /** @var iterable<VoterInterface> */
-    private iterable $voters;
-
-    /**
-     * @param iterable<VoterInterface> $voters
-     */
-    public function __construct(iterable $voters)
+    /** @param iterable<VoterInterface> $voters */
+    public function __construct(private iterable $voters)
     {
-        $this->voters = $voters;
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function addPolicy(string $effect, $subjects, $actions, $resources, ?array $conditions = null): void
+    public function addPolicy(string $effect, $subjects, $actions, $resources, array|null $conditions = null): void
     {
         if ($subjects === null) {
             $subjects = '**';
@@ -52,9 +46,9 @@ class PolicyChecker implements PolicyCheckerInterface
                     array_map(static fn ($v) => (string) $v, (array) $subjects),
                     array_map(static fn ($v) => (string) $v, (array) $actions),
                     array_map(static fn ($v) => (string) $v, (array) $resources),
-                    $conditions ?? []
+                    $conditions ?? [],
                 );
-            } catch (NotSupportedException $e) {
+            } catch (NotSupportedException) {
                 // @ignoreException
             }
 
@@ -67,9 +61,9 @@ class PolicyChecker implements PolicyCheckerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function check(Urn $subject, string $action, ?Urn $resource, array $context): bool
+    public function check(Urn $subject, string $action, Urn|null $resource, array $context): bool
     {
         foreach ($this->voters as $voter) {
             $vote = $voter->vote($subject, $action, $resource, $context);

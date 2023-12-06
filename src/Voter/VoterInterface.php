@@ -20,7 +20,7 @@ interface VoterInterface
      *
      * @param array<string, string|string[]> $context
      */
-    public function vote(Urn $subject, string $action, ?Urn $resource, array $context): int;
+    public function vote(Urn $subject, string $action, Urn|null $resource, array $context): int;
 
     /**
      * Whether this voter supports adding policies.

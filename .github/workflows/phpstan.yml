@@ -10,28 +10,28 @@ jobs:
         runs-on: ubuntu-latest
         name: Static analysis
         steps:
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v4
 
             -   name: Install PHP
                 uses: shivammathur/setup-php@v2
                 with:
                     coverage: none
-                    php-version: "8.0"
+                    php-version: "8.2"
                     tools: cs2pr
 
             -   name: Cache dependencies installed with composer
-                uses: actions/cache@v1
+                uses: actions/cache@v3
                 with:
                     path: "~/.composer/cache"
                     key: php-${{ matrix.php-version }}-composer-locked-${{ hashFiles('composer.lock') }}
                     restore-keys: php-${{ matrix.php-version }}-composer-locked-
 
             -   name: Install dependencies with composer
-                run: composer update --no-progress --no-suggest --no-interaction --prefer-dist
+                run: composer install
 
             -   if: ${{ github.base_ref == '' }}
                 run: composer phpstan
 
             -   name: Run a static analysis with phpstan/phpstan
                 if: ${{ github.base_ref != '' }}
-                run: composer phpstan --error-format=checkstyle | cs2pr
+                run: composer phpstan -- --error-format=checkstyle | cs2pr

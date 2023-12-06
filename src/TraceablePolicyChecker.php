@@ -10,33 +10,28 @@ use Symfony\Contracts\Service\ResetInterface;
 
 class TraceablePolicyChecker implements PolicyCheckerInterface, ResetInterface
 {
-    private PolicyCheckerInterface $decorated;
-    private LoggerInterface $logger;
-
     /**
      * @var array<bool|string>
      * @phpstan-var array<array{action: string, resource: string, subject: string, result: bool}>
      */
     private array $trace = [];
 
-    public function __construct(PolicyCheckerInterface $decorated, LoggerInterface $logger)
+    public function __construct(private PolicyCheckerInterface $decorated, private LoggerInterface $logger)
     {
-        $this->decorated = $decorated;
-        $this->logger = $logger;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function addPolicy(string $effect, $subject, $action, $resource, ?array $conditions = null): void
+    public function addPolicy(string $effect, $subject, $action, $resource, array|null $conditions = null): void
     {
         $this->decorated->addPolicy($effect, $subject, $action, $resource, $conditions);
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function check(Urn $subject, string $action, ?Urn $resource, array $context): bool
+    public function check(Urn $subject, string $action, Urn|null $resource, array $context): bool
     {
         $result = $this->decorated->check($subject, $action, $resource, $context);
         $trace = [

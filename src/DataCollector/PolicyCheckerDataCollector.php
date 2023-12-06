@@ -26,17 +26,13 @@ class PolicyCheckerDataCollector extends DataCollector implements LateDataCollec
 {
     use LoggerAwareTrait;
 
-    private SecurityDataCollector $decorated;
-    private TraceablePolicyChecker $policyChecker;
     private string $baseTemplate = '@Security/Collector/security.html.twig';
 
-    public function __construct(SecurityDataCollector $decorated, TraceablePolicyChecker $policyChecker)
+    public function __construct(private SecurityDataCollector $decorated, private TraceablePolicyChecker $policyChecker)
     {
-        $this->decorated = $decorated;
-        $this->policyChecker = $policyChecker;
     }
 
-    public function collect(Request $request, Response $response, ?Throwable $exception = null): void
+    public function collect(Request $request, Response $response, Throwable|null $exception = null): void
     {
         $this->decorated->collect($request, $response, $exception);
 
@@ -72,12 +68,8 @@ class PolicyCheckerDataCollector extends DataCollector implements LateDataCollec
         return $this->baseTemplate;
     }
 
-    /**
-     * @param mixed[] $arguments
-     *
-     * @return mixed
-     */
-    public function __call(string $name, array $arguments)
+    /** @param mixed[] $arguments */
+    public function __call(string $name, array $arguments): mixed
     {
         $decorated = $this->getDecoratedService();
 
@@ -120,10 +112,8 @@ class PolicyCheckerDataCollector extends DataCollector implements LateDataCollec
         $this->data = $this->cloneVar($this->data + $this->decorated->data);
     }
 
-    /**
-     * @return array<string, mixed>[]|Data|null
-     */
-    public function getPolicyPermissions()
+    /** @return array<string, mixed>[]|Data|null */
+    public function getPolicyPermissions(): array|Data|null
     {
         return $this->data['policy_permissions'] ?? null;
     }

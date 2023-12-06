@@ -12,36 +12,21 @@ jobs:
         steps:
             -   uses: actions/checkout@v2
                 with:
-                    fetch-depth: 10
+                    fetch-depth: 0
 
             -   name: Install PHP
                 uses: shivammathur/setup-php@v2
                 with:
                     coverage: none
-                    php-version: "7.4"
+                    php-version: "8.1"
                     tools: cs2pr
 
-            -   name: Cache dependencies installed with composer
-                uses: actions/cache@v1
-                with:
-                    path: "~/.composer/cache"
-                    key: php-${{ matrix.php-version }}-composer-locked-${{ hashFiles('composer.lock') }}
-                    restore-keys: php-${{ matrix.php-version }}-composer-locked-
-
             -   name: Install dependencies with composer
-                run: composer update --no-interaction --no-progress --no-suggest
+                run: composer install
 
             -   if: ${{ github.base_ref == '' }}
                 run: composer cscheck
 
-            -   name: Install git-phpcs
-                if: ${{ github.base_ref != '' }}
-                run: wget https://github.com/diff-sniffer/diff-sniffer/releases/download/0.5.1/diff-sniffer.phar
-
-            -   name: Fetch head branch
-                if: ${{ github.base_ref != '' }}
-                run: git remote set-branches --add origin $GITHUB_BASE_REF && git fetch origin $GITHUB_BASE_REF
-
             -   name: Run diff-sniffer
                 if: ${{ github.base_ref != '' }}
-                run: php diff-sniffer.phar origin/$GITHUB_BASE_REF...$GITHUB_SHA --report=checkstyle --standard=Solido src/ | cs2pr
+                run: composer cscheck -- --report=checkstyle | cs2pr

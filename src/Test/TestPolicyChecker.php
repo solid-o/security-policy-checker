@@ -13,7 +13,6 @@ use function array_filter;
 use function array_map;
 use function array_unique;
 use function debug_backtrace;
-use function get_class;
 use function is_array;
 use function Safe\preg_match;
 use function strlen;
@@ -34,9 +33,9 @@ class TestPolicyChecker implements PolicyCheckerInterface
     private static array $checkedActions = [];
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function check(Urn $subject, string $action, ?Urn $resource, array $context): bool
+    public function check(Urn $subject, string $action, Urn|null $resource, array $context): bool
     {
         $testName = self::getCurrentTest();
         if ($testName === null) {
@@ -76,9 +75,9 @@ class TestPolicyChecker implements PolicyCheckerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function addPolicy(string $effect, $subjects, $actions, $resources, ?array $conditions = null): void
+    public function addPolicy(string $effect, $subjects, $actions, $resources, array|null $conditions = null): void
     {
         if ($conditions !== null) {
             throw new NotSupportedException('Conditions are not yet supported by Test Policy Checker.');
@@ -94,7 +93,7 @@ class TestPolicyChecker implements PolicyCheckerInterface
      * @param string|string[]|Urn|null $actions
      * @param string|string[]|Urn|null $resources
      */
-    public static function addGrant(string $effect, $subjects, $actions, $resources): void
+    public static function addGrant(string $effect, string|array|Urn|null $subjects, string|array|Urn|null $actions, string|array|Urn|null $resources): void
     {
         $testName = self::getCurrentTest();
         if ($testName === null) {
@@ -145,7 +144,7 @@ class TestPolicyChecker implements PolicyCheckerInterface
         self::$defaultByTest[self::getCurrentTest()] = true;
     }
 
-    private static function getCurrentTest(): ?string
+    private static function getCurrentTest(): string|null
     {
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT);
         foreach ($backtrace as $frame) {
@@ -159,7 +158,7 @@ class TestPolicyChecker implements PolicyCheckerInterface
                 continue;
             }
 
-            return get_class($object) . '::' . $name;
+            return $object::class . '::' . $name;
         }
 
         return null;
@@ -167,10 +166,8 @@ class TestPolicyChecker implements PolicyCheckerInterface
 
     /**
      * Returns a RegExp which is the equivalent of the glob pattern.
-     *
-     * @param string|Urn $glob
      */
-    private static function globToRegex($glob): string
+    private static function globToRegex(string|Urn $glob): string
     {
         $glob = (string) $glob;
         if ($glob === '*') {
