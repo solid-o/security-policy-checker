@@ -14,6 +14,7 @@ use function array_map;
 use function array_unique;
 use function debug_backtrace;
 use function is_array;
+use function method_exists;
 use function Safe\preg_match;
 use function strlen;
 use function trigger_error;
@@ -153,7 +154,7 @@ class TestPolicyChecker implements PolicyCheckerInterface
                 continue;
             }
 
-            $name = $object->getName();
+            $name = method_exists($object, 'name') ? $object->name() : $object->getName(); /** @phpstan-ignore-line */
             if (! $name) {
                 continue;
             }
