@@ -8,8 +8,8 @@ use Solido\Common\Urn\Urn;
 
 interface PolicyCheckerInterface
 {
-    public const EFFECT_ALLOW = 'allow';
-    public const EFFECT_DENY = 'deny';
+    public const string EFFECT_ALLOW = 'allow';
+    public const string EFFECT_DENY = 'deny';
 
     /**
      * Adds a policy to the policy checker engine.

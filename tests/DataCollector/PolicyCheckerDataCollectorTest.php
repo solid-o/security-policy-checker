@@ -1,11 +1,14 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Solido\PolicyChecker\Tests\DataCollector;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Solido\PolicyChecker\DataCollector\PolicyCheckerDataCollector;
-use PHPUnit\Framework\TestCase;
 use Solido\PolicyChecker\TraceablePolicyChecker;
 use Symfony\Bundle\SecurityBundle\DataCollector\SecurityDataCollector;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,7 +35,7 @@ class PolicyCheckerDataCollectorTest extends TestCase
         $this->collector = new PolicyCheckerDataCollector($this->decorated->reveal(), $this->policyChecker->reveal());
     }
 
-    public function provideCollectTraces(): iterable
+    public static function provideCollectTraces(): iterable
     {
         yield [ [], [] ];
         yield [ [ [
@@ -75,9 +78,7 @@ class PolicyCheckerDataCollectorTest extends TestCase
         ] ] ];
     }
 
-    /**
-     * @dataProvider provideCollectTraces
-     */
+    #[DataProvider('provideCollectTraces')]
     public function testCollect(array $traces, array $permissions): void
     {
         $request = new Request();

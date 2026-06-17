@@ -11,8 +11,8 @@ use Symfony\Contracts\Service\ResetInterface;
 class TraceablePolicyChecker implements PolicyCheckerInterface, ResetInterface
 {
     /**
-     * @var array<bool|string>
-     * @phpstan-var array<array{action: string, resource: string, subject: string, result: bool}>
+     * @var array<bool|string|array<string, string|string[]>>
+     * @phpstan-var list<array{action: string, resource: string, subject: string, context: array<string, string|string[]>, result: bool}>
      */
     private array $trace = [];
 
@@ -49,8 +49,8 @@ class TraceablePolicyChecker implements PolicyCheckerInterface, ResetInterface
     }
 
     /**
-     * @return array<string, array<string|bool>>
-     * @phpstan-return array<string, array{action?: string, resource?: string, subject?: string, context?: array, result: bool}>
+     * @return array<string, array<string|bool|array<string, string|string[]>>>
+     * @phpstan-return list<array{action?: string, resource?: string, subject?: string, context?: array<string, string|string[]>, result: bool}>
      */
     public function getTraces(): array
     {

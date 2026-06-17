@@ -8,9 +8,9 @@ use Solido\Common\Urn\Urn;
 
 interface VoterInterface
 {
-    public const ACCESS_GRANTED = 1;
-    public const ACCESS_ABSTAIN = 0;
-    public const ACCESS_DENIED = -1;
+    public const int ACCESS_GRANTED = 1;
+    public const int ACCESS_ABSTAIN = 0;
+    public const int ACCESS_DENIED = -1;
 
     /**
      * Returns the vote for the given parameters.

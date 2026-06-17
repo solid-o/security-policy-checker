@@ -7,6 +7,7 @@ namespace Solido\PolicyChecker\DataCollector;
 use Error;
 use Psr\Log\LoggerAwareTrait;
 use ReflectionClass;
+use ReflectionProperty;
 use Solido\PolicyChecker\TraceablePolicyChecker;
 use Symfony\Bundle\SecurityBundle\DataCollector\SecurityDataCollector;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +21,7 @@ use Throwable;
 use function assert;
 use function is_array;
 use function method_exists;
-use function Safe\sprintf;
+use function sprintf;
 
 class PolicyCheckerDataCollector extends DataCollector implements LateDataCollectorInterface
 {
@@ -34,8 +35,9 @@ class PolicyCheckerDataCollector extends DataCollector implements LateDataCollec
 
     public function collect(Request $request, Response $response, Throwable|null $exception = null): void
     {
-        $this->decorated->collect($request, $response, $exception);
+        $this->getDecoratedService()->collect($request, $response, $exception);
 
+        /** @var list<array<string, mixed>> $permissions */
         $permissions = [];
         foreach ($this->policyChecker->getTraces() as $log) {
             $action = $log['action'] ?? null;
@@ -108,11 +110,12 @@ class PolicyCheckerDataCollector extends DataCollector implements LateDataCollec
 
     public function lateCollect(): void
     {
-        assert(is_array($this->data) && is_array($this->decorated->data));
-        $this->data = $this->cloneVar($this->data + $this->decorated->data);
+        $decorated = $this->getDecoratedService();
+        assert(is_array($this->data) && is_array($decorated->data));
+        $this->data = $this->cloneVar($this->data + $decorated->data);
     }
 
-    /** @return array<string, mixed>[]|Data|null */
+    /** @return array<int, array<string, mixed>>|Data|null */
     public function getPolicyPermissions(): array|Data|null
     {
         return $this->data['policy_permissions'] ?? null;
@@ -120,7 +123,8 @@ class PolicyCheckerDataCollector extends DataCollector implements LateDataCollec
 
     private function getDecoratedService(): SecurityDataCollector
     {
-        if (! isset($this->decorated) && $this->data instanceof Data) {
+        $decoratedProperty = new ReflectionProperty($this, 'decorated');
+        if (! $decoratedProperty->isInitialized($this) && $this->data instanceof Data) {
             // We are in profiler and this instance has been deserialized.
             $reflection = new ReflectionClass(SecurityDataCollector::class);
             $this->decorated = $reflection->newInstanceWithoutConstructor();
